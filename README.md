@@ -3,7 +3,8 @@ Disassemble and assemble complex char-set of korean letters into/from serialized
 
 ## Install
 ```
-pip3 install hangul-asm-py
+#pip3 install hangul-asm-py
+pip3 install git+https://github.com/keicoon/hangul-asm-py.git
 ```
 
 ## Example
