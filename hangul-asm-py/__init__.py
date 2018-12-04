@@ -1,4 +1,3 @@
-
 FIRST_KORAEN_CHAR = "\uac00"
 LAST_KOREAN_CHAR = "\ud7af"
 KOREAN_UNICODE_DEFAULT_INDEX = 0xac00
@@ -11,7 +10,7 @@ import re
 REGEX = re.compile('([{}-{}]+)'.format(hex(DEFAULT_ASCII_INDEX), hex(DEFAULT_ASCII_INDEX+sum(DEFAULT_IMT_ARR))))
 T_INDEX = (DEFAULT_ASCII_INDEX + DEFAULT_IMT_ARR[0] + DEFAULT_IMT_ARR[1])
 
-def init():
+def _init():
     ascii_idx = DEFAULT_ASCII_INDEX
     def mapping(s, d):
         h2Ascii[s] = d
@@ -26,7 +25,7 @@ def init():
         mapping((int('0x11A8', 16) + idx), ascii_idx)
         ascii_idx += 1
 h2Ascii = {}, ascii2H = {}
-init()
+_init()
 
 CONV_FUNC_TABLE = {
     'conv_i_a2b': lambda c: int(((ord(c) - KOREAN_UNICODE_DEFAULT_INDEX) / 28) / 21),
@@ -42,28 +41,25 @@ CONV_FUNC_TABLE = {
     'conv_t_b2a': lambda i: (i - int('0x11A8', 16)) + 1,
 }
 
-def split_korean_char(char) {
-    return list((CONV_FUNC_TABLE.conv_i_a2b(char), CONV_FUNC_TABLE.conv_m_a2b(char), CONV_FUNC_TABLE.conv_t_a2b(char))
-        .filter(lambda c: c > -1, first))
-        .map(lambda (idx, c): (CONV_FUNC_TABLE.conv_i_adv, CONV_FUNC_TABLE.conv_m_adv, CONV_FUNC_TABLE.conv_t_adv)[idx](c))
-        .map(lambda c: h2Ascii[c])
-        .map(lambda c: chr(c)))
-}
-
-def merge_korean_char(chars) {
-    code_korean_char = KOREAN_UNICODE_DEFAULT_INDEX
-    code_korean_char += (CONV_FUNC_TABLE.conv_i_b2a, CONV_FUNC_TABLE.conv_m_b2a, CONV_FUNC_TABLE.conv_t_b2a)
-        .filter(lambda (idx, f): chars[idx])
-        .map(lambda (idx, f): f(ord(ascii2H[chars[idx]])))
-        .sum()
-    return chr(code_korean_char)
-}
-
 def encode(lines):
+    def split_korean_char(char):
+        return list((CONV_FUNC_TABLE.conv_i_a2b(char), CONV_FUNC_TABLE.conv_m_a2b(char), CONV_FUNC_TABLE.conv_t_a2b(char))
+            .filter(lambda c: c > -1, first))
+            .map(lambda (idx, c): (CONV_FUNC_TABLE.conv_i_adv, CONV_FUNC_TABLE.conv_m_adv, CONV_FUNC_TABLE.conv_t_adv)[idx](c))
+            .map(lambda c: h2Ascii[c])
+            .map(lambda c: chr(c)))
     encoded_list = [split_korean_char(char) if LAST_KOREAN_CHAR >= char and char >= FIRST_KORAEN_CHAR else char for c in lines]
     return str(encoded_list)
 
 def decode(lines):
+    def merge_korean_char(chars):
+        code_korean_char = KOREAN_UNICODE_DEFAULT_INDEX
+        code_korean_char += (CONV_FUNC_TABLE.conv_i_b2a, CONV_FUNC_TABLE.conv_m_b2a, CONV_FUNC_TABLE.conv_t_b2a)
+            .filter(lambda (idx, f): chars[idx])
+            .map(lambda (idx, f): f(ord(ascii2H[chars[idx]])))
+            .sum()
+        return chr(code_korean_char)
+
     def replace_func(p1):
         new_str = []
         l = len(p1)
@@ -78,6 +74,3 @@ def decode(lines):
                 i += 2
         return new_str
     return REGEX.sub(replace_func, lines)
-
-def __main__(self):
-    params
