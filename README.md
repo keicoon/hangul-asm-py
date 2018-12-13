@@ -14,6 +14,11 @@ asm = encode("안녕하세요 한글 테스트입니다")
 # ' ¥¥« §
 txt = decode(asm)
 # 안녕하세요 한글 테스트입니다
+
+asm = encode("안녕하세요 한글 테스트입니다", mode_type='charcode')
+# [139, 147, 171, 130, 153, 188, 146, 147, 137, 152, 139, 159, 32, 146, 147, 171, 128, 165, 175, 32, 144, 152, 137, 165, 144, 165, 139, 167, 184, 130, 167, 131, 147]
+txt = decode(asm, mode_type='charcode')
+# 안녕하세요 한글 테스트입니다
 ```
 
 ## Natural representation for Hangul(Korean letter)
@@ -23,6 +28,8 @@ txt = decode(asm)
 * `이것을` --> `ㅇㅣㄱㅓㅅㅇㅡㄹ`
 
 ## Version history
+- v0.1.1
+    - add mode_type 'charcode'
 - v0.1.0
     - release first version
 
