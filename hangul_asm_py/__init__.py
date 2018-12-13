@@ -43,7 +43,7 @@ CONV_B2A_LIST = [
     lambda i: (i - int('0x11A8', 16)) + 1,
 ]
 from functional import seq
-def encode(lines):
+def encode(lines, mode_type='char'):
     def split_korean_char(char):
         chars = list(seq(CONV_A2B_LIST)\
             .map(lambda f: f(char))\
@@ -54,9 +54,12 @@ def encode(lines):
 
     encoded_list = [split_korean_char(char) if LAST_KOREAN_CHAR >= char and char >= FIRST_KORAEN_CHAR else char for char in lines]
     flattened = [val for sublist in encoded_list for val in sublist]
-    return "".join(flattened)
+    flatten_encoded_list = "".join(flattened)
+    if mode_type is 'charcode':
+        flatten_encoded_list = [ord(c) for c in flatten_encoded_list]
+    return flatten_encoded_list
 
-def decode(lines):
+def decode(lines, mode_type='char'):
     def merge_korean_char(chars):
         code_korean_char = KOREAN_UNICODE_DEFAULT_INDEX
         for idx, c in enumerate(chars):
@@ -77,5 +80,6 @@ def decode(lines):
                 new_str.append(merge_korean_char(p1[i:i+2]))
                 i += 2
         return "".join(new_str)
-
+    if mode_type is 'charcode':
+        lines = "".join([chr(c) for c in lines])
     return REGEX.sub(replace_func, lines)

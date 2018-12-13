@@ -7,9 +7,9 @@ if __name__ == '__main__':
 온난화로 인해 '한파 울타리'가 느슨해져 오히려 혹독한 추위가 엄습하는 '온난화의 역설'인 셈이다. 
 대설의 경우 중국 북부지방에서 찬 대륙고기압이 확장하면서 상대적으로 따뜻한 서해상을 중심으로 눈구름이 만들어져 바람을 타고 육상으로 유입돼 발생했다."""
     print(txt)
-    enc = encode(txt)
+    enc = encode(txt, mode_type='charcode')
     print(enc)
-    dec = decode(enc)
+    dec = decode(enc, mode_type='charcode')
     print(dec)
 
     print("""result info
